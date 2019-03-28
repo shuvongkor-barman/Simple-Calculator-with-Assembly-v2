@@ -1,0 +1,383 @@
+<html>
+<head>
+       <title>source code: Calculator v2.0.asm</title>
+       <meta name="description" content="source code">
+       <style>
+           a:link {text-decoration: none}
+           a:visited {text-decoration: none}
+           a:hover {text-decoration: none; color:#ff0000}
+       </style>
+</head>
+<body leftmargin=110  rightmargin=110 topmargin=20 bgcolor=#FFFFFF text=#000000 link=blue vlink=blue alink=blue>
+ 
+ 
+<!-- * -->
+ 
+ 
+
+
+
+
+<h1>&nbsp; &nbsp;<center> <font color=#FFFFFF> ;</font> <font face="Terminal"> Calculator v2.0.asm </font></center></h1>
+
+
+
+
+
+
+<!-- START AUTOMATIC ASM TO HTML EXPORT -->
+<pre><font face="Terminal">
+TITLE: A simple Calculator 
+ 
+.MODEL SMALL 
+.STACK 100H 
+ 
+ 
+.DATA 
+ 
+INTRO <font color=#000064>DB</font> <font color=#800080>"   Calculator v2.0"</font>,10,13 
+          <font color=#000064>DB</font> <font color=#800080>" ---------------------------------"</font>,10,13  
+          <font color=#000064>DB</font> <font color=#800080>" - Use '+' For Addition          -"</font>,10,13 
+          <font color=#000064>DB</font> <font color=#800080>" - Use '-' For Subtraction       -"</font>,10,13 
+          <font color=#000064>DB</font> <font color=#800080>" - Use '*' For Multiplication    -"</font>,10,13 
+          <font color=#000064>DB</font> <font color=#800080>" - Use '/' For Division          -"</font>,10,13 
+          <font color=#000064>DB</font> <font color=#800080>" - Use '2' For Square            -"</font>,10,13 
+          <font color=#000064>DB</font> <font color=#800080>" - Type 'h' For Help             -"</font>,10,13           
+          <font color=#000064>DB</font> <font color=#800080>" - Enter 'y' For EXIT            -"</font>,10,13           
+          <font color=#000064>DB</font> <font color=#800080>" ---------------------------------"</font>,10,13, <font color=#800080>"$"</font>          
+ 
+HELP <font color=#000064>DB</font> <font color=#800080>" --------------- HELP -------------------"</font>, 10,13 
+     <font color=#000064>DB</font> <font color=#800080>" - First Enter a number                 -"</font>, 10,13 
+     <font color=#000064>DB</font> <font color=#800080>" - Then Enter an operator               -"</font>, 10,13 
+     <font color=#000064>DB</font> <font color=#800080>" - Then Enter another number            -"</font>, 10,13 
+     <font color=#000064>DB</font> <font color=#800080>" - For Square just enter a number AND 2 -"</font>, 10,13  
+     <font color=#000064>DB</font> <font color=#800080>" ----------------------------------------"</font>, 10,13, <font color=#800080>"$"</font> 
+ 
+ 
+ 
+NUM3 <font color=#000064>DW</font> ? 
+NUM4 <font color=#000064>DW</font> ? 
+Quotient <font color=#000064>DB</font> <font color=#800080>"Quotient: $"</font>  
+Remainder <font color=#000064>DB</font> <font color=#800080>"Remainder: $"</font> 
+NEWLINE <font color=#000064>DB</font> 10,13, <font color=#800080>"$"</font> 
+ 
+.CODE 
+ MAIN <font color=#0000FF>PROC</font> 
+     
+      <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, @DATA 
+      <font color=#0000FF>MOV</font> <font color=#800000>DS</font>, <font color=#C80000>AX</font> 
+       
+      <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+      <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, INTRO 
+      <font color=#0000FF>INT</font> 21H 
+     
+ 
+LOOPER: 
+ 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,1 
+        <font color=#0000FF>INT</font> 21h 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#C80000>AX</font>  
+         
+         
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"y"</font> 
+        <font color=#0000FF>JE</font> EXIT 
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"Y"</font> 
+        <font color=#0000FF>JE</font> EXIT 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"h"</font> 
+        <font color=#0000FF>JE</font> @HELP  
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"H"</font> 
+        <font color=#0000FF>JE</font> @HELP 
+         
+         
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,1 
+        <font color=#0000FF>INT</font> 21H 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"+"</font> 
+        <font color=#0000FF>JE</font> ADDER 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"-"</font> 
+        <font color=#0000FF>JE</font> SUBER 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"*"</font> 
+        <font color=#0000FF>JE</font> MULER  
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"/"</font> 
+        <font color=#0000FF>JE</font> DIVER 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, <font color=#800080>"2"</font> 
+        <font color=#0000FF>JE</font> SQUARE 
+         
+ 
+ 
+ 
+ 
+ADDER: 
+ 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,1 
+        <font color=#0000FF>INT</font> 21h 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BH</font>, 0 
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AX</font>, <font color=#C80000>BX</font> 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 0 
+        <font color=#0000FF>AAA</font> 
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, 48 
+        <font color=#0000FF>ADD</font> <font color=#C80000>AH</font>, 48 
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#C80000>AX</font> 
+         
+ 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+        
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BH</font> 
+        <font color=#0000FF>INT</font> 21H 
+      
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font> 
+        <font color=#0000FF>INT</font> 21H         
+ 
+         
+        <font color=#0000FF>JMP</font> BOTTOM 
+ 
+ 
+SUBER: 
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,1 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>SUB</font> <font color=#C80000>BL</font>, <font color=#C80000>AL</font> 
+     
+    <font color=#0000FF>ADD</font> <font color=#C80000>BL</font>, 48 
+     
+    
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>,10 
+    <font color=#0000FF>INT</font> 21H 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>,13 
+    <font color=#0000FF>INT</font> 21H 
+     
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font> 
+    <font color=#0000FF>INT</font> 21H 
+     
+ 
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>,10 
+    <font color=#0000FF>INT</font> 21H 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>,13 
+    <font color=#0000FF>INT</font> 21H 
+    <font color=#0000FF>JMP</font> BOTTOM 
+     
+ 
+ 
+MULER:   
+        <font color=#0000FF>MOV</font> <font color=#C80000>BH</font>, 0 
+        <font color=#0000FF>SUB</font> <font color=#C80000>BX</font>, 48 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,1                   
+        <font color=#0000FF>INT</font> 21H 
+         
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,0 
+                
+        <font color=#0000FF>SUB</font> <font color=#C80000>AX</font>, 48 
+ 
+        <font color=#0000FF>MUL</font> <font color=#C80000>BL</font> 
+        <font color=#0000FF>AAM</font> 
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AH</font>, 48 
+        <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, 48 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#C80000>AX</font> 
+         
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+  
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BH</font> 
+        <font color=#0000FF>INT</font> 21H 
+      
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font> 
+        <font color=#0000FF>INT</font> 21H 
+         
+        <font color=#0000FF>JMP</font> BOTTOM 
+ 
+ 
+ 
+ DIVER:   
+        <font color=#0000FF>MOV</font> <font color=#C80000>BH</font>, 0 
+        <font color=#0000FF>SUB</font> <font color=#C80000>BX</font>, 48         
+        <font color=#0000FF>MOV</font> NUM3, <font color=#C80000>BX</font> 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,1                
+        <font color=#0000FF>INT</font> 21H 
+         
+        <font color=#0000FF>SUB</font> <font color=#C80000>AL</font>, 48 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 0 
+         
+         
+        <font color=#0000FF>MOV</font> NUM4, <font color=#C80000>AX</font> 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, NUM4 
+        <font color=#0000FF>MOV</font> <font color=#C80000>BH</font>, 0 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, NUM3 
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, NUM4 
+         
+        <font color=#0000FF>DIV</font> <font color=#C80000>BL</font> 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AH</font>, 0 
+        <font color=#0000FF>JNE</font> FRACTION 
+  
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AH</font>, 48 
+        <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, 48 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#C80000>AX</font> 
+         
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+  
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BH</font> 
+        <font color=#0000FF>INT</font> 21H 
+      
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font> 
+        <font color=#0000FF>INT</font> 21H 
+        <font color=#0000FF>JMP</font> BOTTOM 
+         
+     
+     
+     FRACTION: 
+                 
+        <font color=#0000FF>ADD</font> <font color=#C80000>AH</font>, 48 
+        <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, 48 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#C80000>AX</font> 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, Quotient 
+        <font color=#0000FF>INT</font> 21H 
+         
+                 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font> 
+        <font color=#0000FF>INT</font> 21H 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+         
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, Remainder 
+        <font color=#0000FF>INT</font> 21H 
+      
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BH</font> 
+        <font color=#0000FF>INT</font> 21H 
+         
+     <font color=#0000FF>JMP</font> BOTTOM 
+ 
+ 
+ 
+ 
+ SQUARE:  
+    
+        
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 0 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, <font color=#C80000>BX</font> 
+        <font color=#0000FF>SUB</font> <font color=#C80000>AX</font>, 48 
+         
+        <font color=#0000FF>MUL</font> <font color=#C80000>AX</font> 
+        <font color=#0000FF>AAM</font> 
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AH</font>,48 
+        <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, 48 
+         
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#C80000>AX</font> 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BH</font> 
+        <font color=#0000FF>INT</font> 21H 
+      
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,2 
+        <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font> 
+        <font color=#0000FF>INT</font> 21H 
+        <font color=#0000FF>JMP</font> BOTTOM 
+ 
+ 
+  
+  
+ @HELP: 
+  
+      <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+      <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+      <font color=#0000FF>INT</font> 21H 
+       
+      <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, HELP 
+      <font color=#0000FF>INT</font> 21H 
+ 
+BOTTOM: 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,9 
+        <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, NEWLINE 
+        <font color=#0000FF>INT</font> 21H 
+   
+ 
+<font color=#0000FF>LOOP</font> LOOPER 
+ 
+  
+EXIT: 
+      <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>,4CH 
+      <font color=#0000FF>INT</font> 21H  
+  
+  
+  
+  
+  
+ 
+MAIN ENDP 
+ <font color=#000064>END</font> MAIN 
+ 
+ 
+ 
+ 
+</font></pre>
+<!-- emu8086 version 4.08    -->
+<!-- STOP AUTOMATIC ASM TO HTML EXPORT -->
+
+
+
+
+ 
+ 
+<!-- *** -->
+ 
+ 
+</body>
+</html>
